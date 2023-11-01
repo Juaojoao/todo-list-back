@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/database/prismaService';
-import { UserDTO } from './dto/user.dto';
+import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
-  async create(data: UserDTO) {
+  async create(data: CreateUserDto) {
     const userExists = await this.prisma.user.findFirst({
       where: {
         email: data.email,
@@ -88,8 +88,6 @@ export class UserService {
         email: email,
       },
     });
-
-    console.log('email', user.email);
 
     if (!user) {
       throw new Error('User not found');

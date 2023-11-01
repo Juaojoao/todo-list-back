@@ -5,27 +5,42 @@ import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
+
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
-  ) {}
+  ) { }
 
-  // async signIn(email: string, password: string) {
-  //   const user = await this.userService.findByEmail(email);
+  async validateUser(email: string, password: string) {
+    const user = await this.userService.findByEmail(email);
 
-  //   if (!user) {
-  //     throw new UnauthorizedException('User not found');
-  //   }
+    if (user) {
+      const isPasswordValid = await bcrypt.compare(password, user.password);
 
-  //   const isPasswordValid = await bcrypt.compare(password, user.password);
+      if (isPasswordValid) {
+        return {
+          ...user,
+          password: undefined,
+        }
+      }
 
-  //   if (!isPasswordValid) {
-  //     throw new UnauthorizedException('Invalid credentials');
-  //   }
+      throw new UnauthorizedException('Email adress or password invalid');
+    }
+  }
 
-  //   const payload = { sub: user.id, email: user.email };
-  //   const token = this.jwtService.sign(payload);
+  async signIn(email: string, password: string) {
+    const user = await this.userService.findByEmail(email);
 
-  //   return { access_token: token };
-  // }
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+
+    if (!await bcrypt.compare(password, user.password)) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    const jwt = this.jwtService.sign({ id: user.id, email: user.email });
+
+    return { acess_token: jwt }
+  }
 }

@@ -6,32 +6,22 @@ import {
   Patch,
   Delete,
   Param,
-  Request,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { UserDTO } from './dto/user.dto';
-import { AuthService } from 'src/auth/auth.service';
+import { CreateUserDto } from './dto/create-user.dto';
+
 
 @Controller('user')
 export class UserController {
-  constructor(
-    private readonly userService: UserService,
-    private readonly authService: AuthService,
-  ) {}
+  constructor(private readonly userService: UserService) { }
 
   @Post()
-  async create(@Body() data: UserDTO) {
+  async create(@Body() data: CreateUserDto) {
     return this.userService.create(data);
   }
 
-  // @Post('/login')
-  // async login(@Request() data: UserDTO) {
-  //   return this.authService.signIn(data.email, data.password);
-  // }
-
   @Patch()
-  async updatePassword(@Body() data: UserDTO) {
-    console.log('data', data);
+  async updatePassword(@Body() data: CreateUserDto) {
     return this.userService.updatePassword(data.id, data.password);
   }
 
