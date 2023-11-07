@@ -5,7 +5,7 @@ import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async create(data: CreateUserDto) {
     const userExists = await this.prisma.user.findFirst({
@@ -35,7 +35,12 @@ export class UserService {
   async findAll() {
     const users = await this.prisma.user.findMany();
 
-    return users;
+    const usersWithoutPassword = users.map((user) => ({
+      ...user,
+      password: undefined,
+    }));
+
+    return usersWithoutPassword;
   }
 
   async updatePassword(id: number, password: string) {

@@ -8,9 +8,11 @@ import { APP_GUARD } from '@nestjs/core';
 @Module({
   imports: [TodolistModule, AuthModule, UserModule],
   controllers: [],
-  providers: [{
-    provide: APP_GUARD,
-    useClass: JwtAuthGuard,
-  }],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+  ],
 })
-export class AppModule { }
+export class AppModule {}

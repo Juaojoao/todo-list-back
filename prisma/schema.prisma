@@ -21,12 +21,21 @@ model User {
 }
 
 model Post {
-  id        Int      @id @default(autoincrement())
+  id        Int         @id @default(autoincrement())
   title     String
   content   String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  status    Boolean  @default(false)
-  author    User     @relation(fields: [authorId], references: [id])
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  status    Boolean     @default(false)
+  author    User        @relation(fields: [authorId], references: [id])
+  checklist Checklist[]
   authorId  Int
+}
+
+model Checklist {
+  id          Int     @id @default(autoincrement())
+  description String?
+  status      Boolean @default(false)
+  taskId      Int
+  task        Post    @relation(fields: [taskId], references: [id])
 }
