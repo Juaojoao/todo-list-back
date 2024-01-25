@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { FrameController } from './frame.controller';
-import { FrameService } from './frame.service';
+import { FrameController } from '../frame.controller';
+import { FrameService } from '../frame.service';
 
 describe('FrameController', () => {
   let controller: FrameController;

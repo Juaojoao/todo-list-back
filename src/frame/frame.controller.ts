@@ -1,34 +1,36 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { FrameService } from './frame.service';
 import { CreateFrameDto } from './dto/create-frame.dto';
-import { UpdateFrameDto } from './dto/update-frame.dto';
 
 @Controller('frame')
 export class FrameController {
   constructor(private readonly frameService: FrameService) {}
 
   @Post()
-  create(@Body() createFrameDto: CreateFrameDto) {
-    return this.frameService.create(createFrameDto);
+  async createFrame(@Body() data: CreateFrameDto) {
+    return await this.frameService.create(data);
   }
 
   @Get()
-  findAll() {
-    return this.frameService.findAll();
+  async findAll() {
+    return await this.frameService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.frameService.findOne(+id);
+  @Patch('/:id')
+  async update(@Param('id') id: number, @Body() data: CreateFrameDto) {
+    return await this.frameService.update(id, data);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateFrameDto: UpdateFrameDto) {
-    return this.frameService.update(+id, updateFrameDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.frameService.remove(+id);
+  @Delete('/delete/:id/:userId')
+  async delete(@Param('id') id: number, @Param('userId') userId: number) {
+    return await this.frameService.delete(id, userId);
   }
 }

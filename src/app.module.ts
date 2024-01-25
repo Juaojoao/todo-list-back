@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { TodolistModule } from './todolist/todolist.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { JwtAuthGuard } from './auth/guards/jwt.auth.guards';
@@ -10,7 +9,14 @@ import { CardModule } from './card/card.module';
 import { TaskListModule } from './task-list/task-list.module';
 
 @Module({
-  imports: [TodolistModule, AuthModule, UserModule, FrameModule, ActivitiesListModule, CardModule, TaskListModule],
+  imports: [
+    AuthModule,
+    UserModule,
+    FrameModule,
+    ActivitiesListModule,
+    CardModule,
+    TaskListModule,
+  ],
   controllers: [],
   providers: [
     {

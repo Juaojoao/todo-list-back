@@ -8,11 +8,10 @@ import { UserToken } from './models/userToken';
 
 @Injectable()
 export class AuthService {
-
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
-  ) { }
+  ) {}
 
   async validateUser(email: string, password: string) {
     const user = await this.userService.findByEmail(email);
@@ -24,7 +23,7 @@ export class AuthService {
         return {
           ...user,
           password: undefined,
-        }
+        };
       }
 
       throw new UnauthorizedException('Email adress or password invalid');
@@ -36,12 +35,12 @@ export class AuthService {
       sub: user.id,
       email: user.email,
       name: user.name,
-    }
+    };
 
     const jwtToken = this.jwtService.sign(payload);
 
     return {
       access_token: jwtToken,
-    }
+    };
   }
 }

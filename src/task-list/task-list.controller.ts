@@ -1,34 +1,41 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Get,
+  Delete,
+} from '@nestjs/common';
 import { TaskListService } from './task-list.service';
-import { CreateTaskListDto } from './dto/create-task-list.dto';
-import { UpdateTaskListDto } from './dto/update-task-list.dto';
+import { Public } from 'src/auth/decorators/is-public.decorator';
+import { CreateTaskDto } from './dto/task/create-task.dto';
 
-@Controller('task-list')
+@Controller('tasklist')
 export class TaskListController {
   constructor(private readonly taskListService: TaskListService) {}
 
-  @Post()
-  create(@Body() createTaskListDto: CreateTaskListDto) {
-    return this.taskListService.create(createTaskListDto);
+  @Public()
+  @Post('/task')
+  async createTask(@Body() data: CreateTaskDto) {
+    return await this.taskListService.createTask(data);
   }
 
-  @Get()
-  findAll() {
-    return this.taskListService.findAll();
+  @Public()
+  @Patch('/task/:id')
+  async updateTask(@Param('id') id: number, @Body() data: CreateTaskDto) {
+    return await this.taskListService.updateTask(id, data);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.taskListService.findOne(+id);
+  @Public()
+  @Get('/task')
+  async getAllTasks() {
+    return await this.taskListService.getAllTasks();
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTaskListDto: UpdateTaskListDto) {
-    return this.taskListService.update(+id, updateTaskListDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.taskListService.remove(+id);
+  @Public()
+  @Delete('/task/:id')
+  async deleteTaskById(@Param('id') id: number) {
+    return await this.taskListService.deleteTask(id);
   }
 }
