@@ -1,26 +1,77 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCardDto } from './dto/create-card.dto';
+import { PrismaService } from 'src/database/prismaService';
 import { UpdateCardDto } from './dto/update-card.dto';
 
 @Injectable()
 export class CardService {
-  create(createCardDto: CreateCardDto) {
-    return 'This action adds a new card';
+  constructor(private readonly prisma: PrismaService) {}
+
+  async create(data: CreateCardDto) {
+    const activityListId = Number(data.activitiesListId);
+
+    if (!activityListId) {
+      return { message: 'Activity List does not exist' };
+    }
+
+    const activityListExists = await this.prisma.activitiesList.findFirst({
+      where: { id: activityListId },
+    });
+
+    if (!activityListExists) {
+      return { message: 'Activity List does not exist' };
+    }
+
+    await this.prisma.card.create({ data: data });
+
+    return 'Card created successfully';
   }
 
-  findAll() {
-    return `This action returns all card`;
+  async update(id: number, data: UpdateCardDto) {
+    const cardId = Number(id);
+    const activitiesListId = Number(data.activitiesListId);
+
+    if (!cardId || !activitiesListId) {
+      return { message: 'Activity List does not exist' };
+    }
+    const cardExists = await this.prisma.card.findFirst({
+      where: { id: cardId, activitiesListId: activitiesListId },
+    });
+
+    if (!cardExists) {
+      return { message: 'Activity List does not exist' };
+    }
+
+    await this.prisma.card.update({
+      where: { id: cardId },
+      data: data,
+    });
+
+    return 'Card updated successfully';
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} card`;
+  async getAll() {
+    return await this.prisma.card.findMany();
   }
 
-  update(id: number, updateCardDto: UpdateCardDto) {
-    return `This action updates a #${id} card`;
-  }
+  async delete(id: number, activitiesId: number) {
+    const cardId = Number(id);
+    const activitiesListId = Number(activitiesId);
 
-  remove(id: number) {
-    return `This action removes a #${id} card`;
+    if (!cardId || !activitiesListId) {
+      return { message: 'Activity List does not exist' };
+    }
+
+    const cardExists = await this.prisma.card.findFirst({
+      where: { id: cardId, activitiesListId: activitiesListId },
+    });
+
+    if (!cardExists) {
+      return { message: 'Activity List does not exist' };
+    }
+
+    await this.prisma.card.delete({ where: { id: cardId } });
+
+    return 'Card deleted successfully';
   }
 }

@@ -1,19 +1,15 @@
-import { IsNumber, IsString, IsDate } from 'class-validator';
+import { IsNumber, IsString, IsOptional } from 'class-validator';
 import { CreateTaskListEntity } from 'src/task-list/entities/task-list.entity';
 
 export class CreateTaskListDto extends CreateTaskListEntity {
+  @IsOptional()
   @IsNumber()
   id: number;
 
   @IsString()
   name: string;
 
+  @IsOptional()
   @IsNumber()
   cardId: number;
-
-  @IsDate()
-  createdAt: Date;
-
-  @IsDate()
-  updatedAt: Date;
 }

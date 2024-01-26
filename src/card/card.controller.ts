@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Get,
+  Delete,
+} from '@nestjs/common';
 import { CardService } from './card.service';
 import { CreateCardDto } from './dto/create-card.dto';
 import { UpdateCardDto } from './dto/update-card.dto';
@@ -7,28 +15,26 @@ import { UpdateCardDto } from './dto/update-card.dto';
 export class CardController {
   constructor(private readonly cardService: CardService) {}
 
-  @Post()
-  create(@Body() createCardDto: CreateCardDto) {
-    return this.cardService.create(createCardDto);
+  @Post('/create')
+  async create(@Body() createCardDto: CreateCardDto) {
+    return await this.cardService.create(createCardDto);
   }
 
-  @Get()
-  findAll() {
-    return this.cardService.findAll();
+  @Patch('/update/:id')
+  async update(@Param('id') id: number, @Body() data: UpdateCardDto) {
+    return await this.cardService.update(id, data);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.cardService.findOne(+id);
+  @Get('/get')
+  async getAll() {
+    return await this.cardService.getAll();
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCardDto: UpdateCardDto) {
-    return this.cardService.update(+id, updateCardDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.cardService.remove(+id);
+  @Delete('/delete/:id/:activitiesId')
+  async delete(
+    @Param('id') id: number,
+    @Param('activitiesId') activitiesId: number,
+  ) {
+    return await this.cardService.delete(id, activitiesId);
   }
 }

@@ -17,12 +17,7 @@ export class FrameService {
       return { message: 'User does not exist' };
     }
 
-    await this.prisma.frame.create({
-      data: {
-        name: data.name,
-        userId: userId,
-      },
-    });
+    await this.prisma.frame.create({ data: data });
 
     return 'Frame created successfully';
   }
@@ -39,15 +34,11 @@ export class FrameService {
       return { message: 'User or Frame does not exist' };
     }
 
-    const userExists = await this.prisma.user.findFirst({
-      where: { id: userId },
-    });
-
     const frameExists = await this.prisma.frame.findFirst({
-      where: { id: frameId },
+      where: { id: frameId, userId: userId },
     });
 
-    if (!userExists || !frameExists) {
+    if (!frameExists) {
       return { message: 'User or Frame does not exist' };
     }
 
@@ -69,16 +60,11 @@ export class FrameService {
     if (!frameId || !frameUserId) {
       return { message: 'User or Frame does not exist' };
     }
-
-    const userExists = await this.prisma.user.findFirst({
-      where: { id: frameUserId },
-    });
-
     const frameExists = await this.prisma.frame.findFirst({
-      where: { id: frameId },
+      where: { id: frameId, userId: frameUserId },
     });
 
-    if (!userExists || !frameExists) {
+    if (!frameExists) {
       return { message: 'User or Frame does not exist' };
     }
 
