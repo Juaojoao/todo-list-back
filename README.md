@@ -5,6 +5,8 @@ A project aimed at learning, but also at creating a "To do" in a freer way and a
 Specifically, I'm just creating the Back-End and then applying it to a Front-End project.
 </h4>
 
+<p>Diagrama do banco de dados: https://www.figma.com/file/DOrdIZjWp5slk5MPA0TGmg/Database-Diagram?type=design&node-id=102%3A271&mode=design&t=CqHdujsIqVcJFpVz-1</p>
+
 # Getting Started
 
 ### 🛡️Installation Requirements🛡️
@@ -17,7 +19,7 @@ Specifically, I'm just creating the Back-End and then applying it to a Front-End
 
 ### Step 1 - Git Clone 🖨️
 ```
-$ git clone https://github.com/Juaojoao/todo-list-back.git 
+$ git clone https://github.com/Juaojoao/todolist-back.git 
 ```
 
 ### Step 2 - NPM install (to install the dependencies) ⬇️
