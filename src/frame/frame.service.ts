@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/database/prismaService';
+import { PrismaService } from '../database/prismaService';
 import { CreateFrameDto } from './dto/create-frame.dto';
 
 @Injectable()
@@ -7,17 +7,12 @@ export class FrameService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(data: CreateFrameDto) {
-    const userId = Number(data.userId);
-
-    const userExists = await this.prisma.user.findFirst({
-      where: { id: userId },
+    await this.prisma.frame.create({
+      data: {
+        ...data,
+        userId: data.userId,
+      },
     });
-
-    if (!userExists) {
-      return { message: 'User does not exist' };
-    }
-
-    await this.prisma.frame.create({ data: data });
 
     return 'Frame created successfully';
   }
@@ -35,7 +30,7 @@ export class FrameService {
     }
 
     const frameExists = await this.prisma.frame.findFirst({
-      where: { id: frameId, userId: userId },
+      where: { id: frameId },
     });
 
     if (!frameExists) {

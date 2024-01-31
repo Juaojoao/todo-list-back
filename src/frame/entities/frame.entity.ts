@@ -1,9 +1,7 @@
-import { Frame as PrismaFrame } from '@prisma/client';
-
-export class FrameEntity implements PrismaFrame {
-  id: number;
+export class FrameEntity {
+  id?: number;
   name: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
   userId: number;
 }

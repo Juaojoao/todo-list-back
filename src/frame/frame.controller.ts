@@ -15,7 +15,7 @@ export class FrameController {
   constructor(private readonly frameService: FrameService) {}
 
   @Post()
-  async createFrame(@Body() data: CreateFrameDto) {
+  async createFrame(@Body() userId: number, data: CreateFrameDto) {
     return await this.frameService.create(data);
   }
 
