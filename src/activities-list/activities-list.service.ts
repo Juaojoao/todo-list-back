@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/database/prismaService';
+import { PrismaService } from '../database/prismaService';
 import { CreateActivitiesListDto } from './dto/create-activities-list.dto';
 import { UpdateActivitiesListDto } from './dto/update-activities-list.dto';
 
@@ -8,10 +8,8 @@ export class ActivitiesListService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(data: CreateActivitiesListDto) {
-    const FrameId = Number(data.frameId);
-
     const FrameExists = await this.prisma.frame.findFirst({
-      where: { id: FrameId },
+      where: { id: data.frameId },
     });
 
     if (!FrameExists) {
@@ -21,7 +19,7 @@ export class ActivitiesListService {
     await this.prisma.activitiesList.create({
       data: {
         name: data.name,
-        frameId: FrameId,
+        frameId: data.frameId,
       },
     });
 

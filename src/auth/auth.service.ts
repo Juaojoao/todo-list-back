@@ -1,8 +1,8 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { UserService } from 'src/user/user.service';
+import { UserService } from '../user/user.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { User } from 'src/user/entities/user.entity';
+import { userEntity } from '../user/entities/user.entity';
 import { UserPayload } from './models/userPayload';
 import { UserToken } from './models/userToken';
 
@@ -30,7 +30,7 @@ export class AuthService {
     }
   }
 
-  async signIn(user: User): Promise<UserToken> {
+  async signIn(user: userEntity): Promise<UserToken> {
     const payload: UserPayload = {
       sub: user.id,
       email: user.email,

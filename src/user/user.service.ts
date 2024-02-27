@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/database/prismaService';
+import { PrismaService } from '../database/prismaService';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 
@@ -15,7 +15,7 @@ export class UserService {
     });
 
     if (userExists) {
-      throw new Error('User already exists');
+      throw new Error('Email already exists');
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -70,7 +70,10 @@ export class UserService {
       throw new Error('User not found');
     }
 
-    return user;
+    return {
+      ...user,
+      password: undefined,
+    };
   }
 
   async delete(id: number) {

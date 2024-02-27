@@ -7,6 +7,18 @@ export class FrameService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(data: CreateFrameDto) {
+    const userId = Number(data.userId);
+    if (!userId) {
+      return { message: 'User does not exist' };
+    }
+
+    const userExists = await this.prisma.user.findFirst({
+      where: { id: userId },
+    });
+
+    if (!userExists) {
+      return { message: 'User does not exist' };
+    }
     await this.prisma.frame.create({
       data: {
         ...data,
@@ -18,7 +30,9 @@ export class FrameService {
   }
 
   async findAll() {
-    return await this.prisma.frame.findMany();
+    return await this.prisma.frame.findMany({
+      include: { activitiesList: true },
+    });
   }
 
   async update(id: number, data: CreateFrameDto) {

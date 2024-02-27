@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCardDto } from './dto/create-card.dto';
-import { PrismaService } from 'src/database/prismaService';
+import { PrismaService } from '../database/prismaService';
 import { UpdateCardDto } from './dto/update-card.dto';
 
 @Injectable()
@@ -51,7 +51,7 @@ export class CardService {
   }
 
   async getAll() {
-    return await this.prisma.card.findMany();
+    return await this.prisma.card.findMany({ include: { tasklist: true } });
   }
 
   async delete(id: number, activitiesId: number) {
