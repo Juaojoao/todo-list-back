@@ -35,6 +35,19 @@ export class FrameService {
     });
   }
 
+  async findByOwnerId(userId: number) {
+    const user = Number(userId);
+
+    if (!user) {
+      return { message: 'User does not exist' };
+    }
+
+    return await this.prisma.frame.findMany({
+      where: { userId: user },
+      include: { activitiesList: true },
+    });
+  }
+
   async update(id: number, data: CreateFrameDto) {
     const frameId = Number(id);
     const userId = Number(data.userId);
@@ -77,10 +90,32 @@ export class FrameService {
       return { message: 'User or Frame does not exist' };
     }
 
-    await this.prisma.frame.delete({
-      where: { id: frameId },
-    });
+    try {
+      await this.prisma.$transaction([
+        this.prisma.task.deleteMany({
+          where: {
+            TaskList: { Card: { ActivitiesList: { frameId: frameId } } },
+          },
+        }),
 
-    return 'Frame deleted successfully';
+        this.prisma.taskList.deleteMany({
+          where: { Card: { ActivitiesList: { frameId: frameId } } },
+        }),
+
+        this.prisma.card.deleteMany({
+          where: { ActivitiesList: { frameId: frameId } },
+        }),
+
+        this.prisma.activitiesList.deleteMany({
+          where: { frameId: frameId },
+        }),
+
+        this.prisma.frame.delete({
+          where: { id: frameId },
+        }),
+      ]);
+    } catch (error) {
+      return { message: 'Frame not deleted' };
+    }
   }
 }

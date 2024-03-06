@@ -73,10 +73,27 @@ export class ActivitiesListService {
       return { message: 'Frame or tasklist does exist' };
     }
 
-    await this.prisma.activitiesList.delete({
-      where: { id: taskListId },
-    });
+    try {
+      await this.prisma.$transaction([
+        this.prisma.card.deleteMany({
+          where: { activitiesListId: taskListId },
+        }),
 
-    return 'Activity List deleted Successfully';
+        this.prisma.taskList.deleteMany({
+          where: { Card: { ActivitiesList: { id: taskListId } } },
+        }),
+
+        this.prisma.task.deleteMany({
+          where: { TaskList: { Card: { ActivitiesList: { id: taskListId } } } },
+        }),
+
+        this.prisma.activitiesList.delete({ where: { id: taskListId } }),
+      ]);
+
+      return 'Activity List deleted successfully';
+    } catch (error) {
+      console.error('Error deleting activity list:', error);
+      return { message: 'Error deleting activity list' };
+    }
   }
 }

@@ -9,6 +9,7 @@ export class CreateCardDto extends CardEntity {
   @IsString()
   name: string;
 
+  @IsOptional()
   @IsString()
   description: string;
 

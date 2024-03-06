@@ -24,6 +24,11 @@ export class FrameController {
     return await this.frameService.findAll();
   }
 
+  @Get('/:userId')
+  async findByOwnerId(@Param('userId') userId: number) {
+    return await this.frameService.findByOwnerId(userId);
+  }
+
   @Patch('/:id')
   async update(@Param('id') id: number, @Body() data: CreateFrameDto) {
     return await this.frameService.update(id, data);
