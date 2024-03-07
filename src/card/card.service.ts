@@ -70,8 +70,17 @@ export class CardService {
       return { message: 'Activity List does not exist' };
     }
 
-    await this.prisma.card.delete({ where: { id: cardId } });
-
-    return 'Card deleted successfully';
+    try {
+      await this.prisma.$transaction([
+        this.prisma.task.deleteMany({
+          where: { TaskList: { cardId: cardId } },
+        }),
+        this.prisma.taskList.deleteMany({ where: { cardId: cardId } }),
+        this.prisma.card.delete({ where: { id: cardId } }),
+      ]);
+      return 'Card deleted successfully';
+    } catch (error) {
+      return { message: 'Error deleting card' };
+    }
   }
 }

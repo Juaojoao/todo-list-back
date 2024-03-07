@@ -6,6 +6,7 @@ export class CreateCardDto extends CardEntity {
   @IsNumber()
   id: number;
 
+  @IsOptional()
   @IsString()
   name: string;
 
