@@ -7,9 +7,15 @@ import { UpdateActivitiesListDto } from './dto/update-activities-list.dto';
 export class ActivitiesListService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(data: CreateActivitiesListDto) {
+  async create({ name, frameId }: CreateActivitiesListDto) {
+    const frameIdNumber = Number(frameId);
+
+    if (!frameIdNumber) {
+      return { message: 'Frame does exists' };
+    }
+
     const FrameExists = await this.prisma.frame.findFirst({
-      where: { id: data.frameId },
+      where: { id: frameIdNumber },
     });
 
     if (!FrameExists) {
@@ -18,24 +24,23 @@ export class ActivitiesListService {
 
     await this.prisma.activitiesList.create({
       data: {
-        name: data.name,
-        frameId: data.frameId,
+        name: name,
+        frameId: frameIdNumber,
       },
     });
 
     return 'Activity List created Successfully';
   }
 
-  async update(id: number, data: UpdateActivitiesListDto) {
+  async update(id: number, { name }: UpdateActivitiesListDto) {
     const activitiesId = Number(id);
-    const frameId = Number(data.frameId);
 
-    if (!frameId || !activitiesId) {
+    if (!activitiesId) {
       return { message: 'Frame or tasklist does exist' };
     }
 
     const taskListExists = await this.prisma.activitiesList.findFirst({
-      where: { id: activitiesId, frameId: frameId },
+      where: { id: activitiesId },
     });
 
     if (!taskListExists) {
@@ -44,29 +49,31 @@ export class ActivitiesListService {
 
     await this.prisma.activitiesList.update({
       where: { id: activitiesId },
-      data: {
-        name: data.name,
-        frameId: frameId,
-      },
+      data: { name },
     });
 
     return 'Activity List updated Successfully';
   }
 
-  async getAll() {
-    return await this.prisma.activitiesList.findMany();
+  async getAll(frameId: number) {
+    const frameIdNumber = Number(frameId);
+
+    if (!frameIdNumber) return { message: 'Frame does not exist' };
+
+    return await this.prisma.activitiesList.findMany({
+      where: { frameId: frameIdNumber },
+    });
   }
 
-  async delete(id: number, frameId: number) {
+  async delete(id: number) {
     const taskListId = Number(id);
-    const frameUid = Number(frameId);
 
-    if (!frameUid || !taskListId) {
+    if (!taskListId) {
       return { message: 'Frame or tasklist does exist' };
     }
 
     const taskListExists = await this.prisma.activitiesList.findFirst({
-      where: { id: taskListId, frameId: frameUid },
+      where: { id: taskListId },
     });
 
     if (!taskListExists) {

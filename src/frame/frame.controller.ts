@@ -20,11 +20,6 @@ export class FrameController {
     return await this.frameService.create({ userId, name });
   }
 
-  @Get()
-  async findAll() {
-    return await this.frameService.findAll();
-  }
-
   @Get('/:userId')
   async findByOwnerId(@Param('userId') userId: number) {
     return await this.frameService.findByOwnerId(userId);

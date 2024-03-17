@@ -15,22 +15,25 @@ export class ActivitiesListController {
   constructor(private readonly activitiesListService: ActivitiesListService) {}
 
   @Post('/create')
-  async create(@Body() data: CreateActivitiesListDto) {
-    return await this.activitiesListService.create(data);
+  async create(@Body() { name, frameId }: CreateActivitiesListDto) {
+    return await this.activitiesListService.create({ name, frameId });
   }
 
   @Patch('/update/:id')
-  async update(@Param('id') id: number, @Body() data: CreateActivitiesListDto) {
-    return await this.activitiesListService.update(id, data);
+  async update(
+    @Param('id') id: number,
+    @Body() { name }: CreateActivitiesListDto,
+  ) {
+    return await this.activitiesListService.update(id, { name });
   }
 
-  @Get('/get')
-  async getAll() {
-    return await this.activitiesListService.getAll();
+  @Get('/get/:id')
+  async getAll(@Param('frameId') frameId: number) {
+    return await this.activitiesListService.getAll(frameId);
   }
 
-  @Delete('/delete/:id/:frameId')
-  async delete(@Param('id') id: number, @Param('frameId') frameId: number) {
-    return this.activitiesListService.delete(id, frameId);
+  @Delete('/delete/:id')
+  async delete(@Param('id') id: number) {
+    return this.activitiesListService.delete(id);
   }
 }

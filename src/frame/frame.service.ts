@@ -25,10 +25,6 @@ export class FrameService {
     return 'Frame created successfully';
   }
 
-  async findAll() {
-    return await this.prisma.frame.findMany();
-  }
-
   async findByOwnerId(userId: number) {
     const user = Number(userId);
 
