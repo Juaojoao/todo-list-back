@@ -3,5 +3,5 @@ export class FrameEntity {
   name: string;
   createdAt?: Date;
   updatedAt?: Date;
-  userId: number;
+  userId?: number;
 }

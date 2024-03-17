@@ -9,14 +9,15 @@ import {
 } from '@nestjs/common';
 import { FrameService } from './frame.service';
 import { CreateFrameDto } from './dto/create-frame.dto';
+import { log } from 'console';
 
 @Controller('frame')
 export class FrameController {
   constructor(private readonly frameService: FrameService) {}
 
-  @Post()
-  async createFrame(@Body() data: CreateFrameDto) {
-    return await this.frameService.create(data);
+  @Post('/create')
+  async createFrame(@Body() { userId, name }: CreateFrameDto) {
+    return await this.frameService.create({ userId, name });
   }
 
   @Get()
@@ -30,12 +31,12 @@ export class FrameController {
   }
 
   @Patch('/:id')
-  async update(@Param('id') id: number, @Body() data: CreateFrameDto) {
-    return await this.frameService.update(id, data);
+  async update(@Param('id') id: number, @Body() { name }: CreateFrameDto) {
+    return await this.frameService.update(id, { name });
   }
 
-  @Delete('/delete/:id/:userId')
-  async delete(@Param('id') id: number, @Param('userId') userId: number) {
-    return await this.frameService.delete(id, userId);
+  @Delete('/delete/:id')
+  async delete(@Param('id') id: number) {
+    return await this.frameService.delete(id);
   }
 }

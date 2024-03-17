@@ -6,8 +6,7 @@ import { CreateFrameDto } from './dto/create-frame.dto';
 export class FrameService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(data: CreateFrameDto) {
-    const userId = Number(data.userId);
+  async create({ userId, name }: CreateFrameDto) {
     if (!userId) {
       return { message: 'User does not exist' };
     }
@@ -20,19 +19,14 @@ export class FrameService {
       return { message: 'User does not exist' };
     }
     await this.prisma.frame.create({
-      data: {
-        ...data,
-        userId: data.userId,
-      },
+      data: { userId, name },
     });
 
     return 'Frame created successfully';
   }
 
   async findAll() {
-    return await this.prisma.frame.findMany({
-      include: { activitiesList: true },
-    });
+    return await this.prisma.frame.findMany();
   }
 
   async findByOwnerId(userId: number) {
@@ -48,11 +42,10 @@ export class FrameService {
     });
   }
 
-  async update(id: number, data: CreateFrameDto) {
+  async update(id: number, { name }: CreateFrameDto) {
     const frameId = Number(id);
-    const userId = Number(data.userId);
 
-    if (!userId || !frameId) {
+    if (!frameId || name === '') {
       return { message: 'User or Frame does not exist' };
     }
 
@@ -66,24 +59,20 @@ export class FrameService {
 
     await this.prisma.frame.update({
       where: { id: frameId },
-      data: {
-        name: data.name,
-        userId: userId,
-      },
+      data: { name },
     });
 
     return 'Frame updated successfully';
   }
 
-  async delete(id: number, userId: number) {
+  async delete(id: number) {
     const frameId = Number(id);
-    const frameUserId = Number(userId);
 
-    if (!frameId || !frameUserId) {
+    if (!frameId) {
       return { message: 'User or Frame does not exist' };
     }
     const frameExists = await this.prisma.frame.findFirst({
-      where: { id: frameId, userId: frameUserId },
+      where: { id: frameId },
     });
 
     if (!frameExists) {
