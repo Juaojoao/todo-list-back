@@ -50,8 +50,27 @@ export class CardService {
     return 'Card updated successfully';
   }
 
-  async getAll() {
-    return await this.prisma.card.findMany({ include: { tasklist: true } });
+  async getAll(userId: number) {
+    const userIdNumber = Number(userId);
+
+    if (!userIdNumber) {
+      return { message: 'User does not exist' };
+    }
+
+    const userExists = await this.prisma.user.findFirst({
+      where: { id: userIdNumber },
+    });
+
+    if (!userExists) {
+      return { message: 'User does not exist' };
+    }
+
+    return await this.prisma.card.findMany({
+      where: {
+        ActivitiesList: { Frame: { userId: { equals: userIdNumber } } },
+      },
+      include: { tasklist: true },
+    });
   }
 
   async delete(id: number, activitiesId: number) {

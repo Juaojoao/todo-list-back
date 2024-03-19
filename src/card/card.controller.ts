@@ -25,9 +25,9 @@ export class CardController {
     return await this.cardService.update(id, data);
   }
 
-  @Get('/get')
-  async getAll() {
-    return await this.cardService.getAll();
+  @Get('/get/:userId')
+  async getAll(@Param('userId') userId: number) {
+    return await this.cardService.getAll(userId);
   }
 
   @Delete('/delete/:id/:activitiesId')

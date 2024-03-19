@@ -34,7 +34,6 @@ export class FrameService {
 
     return await this.prisma.frame.findMany({
       where: { userId: user },
-      include: { activitiesList: true },
     });
   }
 

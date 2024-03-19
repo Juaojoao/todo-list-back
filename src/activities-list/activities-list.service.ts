@@ -55,13 +55,19 @@ export class ActivitiesListService {
     return 'Activity List updated Successfully';
   }
 
-  async getAll(frameId: number) {
-    const frameIdNumber = Number(frameId);
+  async getAll(userId: number) {
+    const userIdNumber = Number(userId);
 
-    if (!frameIdNumber) return { message: 'Frame does not exist' };
+    if (!userIdNumber) return { message: 'Frame does not exist' };
+
+    const userAlreadyExists = await this.prisma.user.findFirst({
+      where: { id: userIdNumber },
+    });
+
+    if (!userAlreadyExists) return { message: 'Frame does not exist' };
 
     return await this.prisma.activitiesList.findMany({
-      where: { frameId: frameIdNumber },
+      where: { Frame: { userId: userIdNumber } },
     });
   }
 
