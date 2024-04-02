@@ -74,8 +74,10 @@ model TaskList {
 
 model Task {
   id         Int       @id @default(autoincrement())
-  status     Boolean   @default(true)
+  status     Boolean   @default(false)
   name       String
   TaskList   TaskList? @relation(fields: [taskListId], references: [id])
   taskListId Int?
+
+  @@map("tasks")
 }

@@ -29,13 +29,12 @@ export class CardService {
 
   async update(id: number, data: UpdateCardDto) {
     const cardId = Number(id);
-    const activitiesListId = Number(data.activitiesListId);
 
-    if (!cardId || !activitiesListId) {
+    if (!cardId) {
       return { message: 'Activity List does not exist' };
     }
     const cardExists = await this.prisma.card.findFirst({
-      where: { id: cardId, activitiesListId: activitiesListId },
+      where: { id: cardId },
     });
 
     if (!cardExists) {
@@ -73,16 +72,15 @@ export class CardService {
     });
   }
 
-  async delete(id: number, activitiesId: number) {
+  async delete(id: number) {
     const cardId = Number(id);
-    const activitiesListId = Number(activitiesId);
 
-    if (!cardId || !activitiesListId) {
+    if (!cardId) {
       return { message: 'Activity List does not exist' };
     }
 
     const cardExists = await this.prisma.card.findFirst({
-      where: { id: cardId, activitiesListId: activitiesListId },
+      where: { id: cardId },
     });
 
     if (!cardExists) {

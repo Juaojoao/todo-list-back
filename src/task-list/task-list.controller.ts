@@ -6,6 +6,7 @@ import {
   Param,
   Get,
   Delete,
+  Put,
 } from '@nestjs/common';
 import { TaskListService } from './task-list.service';
 import { CreateTaskDto } from './dto/task/create-task.dto';
@@ -27,9 +28,9 @@ export class TaskListController {
     return await this.taskListService.updateTaskList(id, data);
   }
 
-  @Get('/get')
-  async getAll() {
-    return await this.taskListService.getAllTaskList();
+  @Get('/get/:userId')
+  async getAll(@Param('userId') userId: number) {
+    return await this.taskListService.getAllTaskList(userId);
   }
 
   @Delete('/delete/:id/:cardId')
@@ -60,6 +61,11 @@ export class TaskListController {
     @Param('tasklistId') tasklistId: number,
   ) {
     return await this.taskListService.deleteTask(id, tasklistId);
+  }
+
+  @Put('/task/updateStatus/:id')
+  async updateStatus(@Param('id') id: number, @Body() status: boolean) {
+    return await this.taskListService.updateStatusTask(id, status);
   }
   // Fim Task
 }

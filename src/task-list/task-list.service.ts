@@ -56,8 +56,31 @@ export class TaskListService {
     return 'Task List updated Successfuly';
   }
 
-  async getAllTaskList() {
-    return await this.prisma.taskList.findMany();
+  async getAllTaskList(userId: number) {
+    const userIdNumber = Number(userId);
+
+    if (!userIdNumber) {
+      return {
+        messege: 'User does not exist',
+      };
+    }
+
+    const userExists = await this.prisma.user.findFirst({
+      where: { id: userIdNumber },
+    });
+
+    if (!userExists) {
+      return { message: 'User does not exist' };
+    }
+
+    return await this.prisma.taskList.findMany({
+      where: {
+        Card: {
+          ActivitiesList: { Frame: { userId: { equals: userIdNumber } } },
+        },
+      },
+      include: { tasks: true },
+    });
   }
 
   async deleteTaskList(id: number, cardId: number) {
@@ -109,16 +132,15 @@ export class TaskListService {
 
   async updateTask(id: number, data: UpdateTaskDto) {
     const taskId = Number(id);
-    const taskListId = Number(data.taskListId);
 
-    if (!taskListId || !taskId) {
+    if (!taskId) {
       return {
         messege: 'Task not found',
       };
     }
 
     const taskExists = await this.prisma.task.findFirst({
-      where: { id: taskId, taskListId: taskListId },
+      where: { id: taskId },
     });
 
     if (!taskExists) {
@@ -133,6 +155,35 @@ export class TaskListService {
     });
 
     return 'Task updated Successfuly';
+  }
+
+  async updateStatusTask(id: number, statusTask: any) {
+    const taskId = Number(id);
+
+    const { status } = statusTask;
+
+    if (!taskId) {
+      return {
+        messege: 'Task not found',
+      };
+    }
+
+    const taskExists = await this.prisma.task.findFirst({
+      where: { id: taskId },
+    });
+
+    if (!taskExists) {
+      return {
+        messege: 'task not found',
+      };
+    }
+
+    await this.prisma.task.update({
+      where: { id: taskId },
+      data: { status },
+    });
+
+    return 'Task status updated Successfuly';
   }
 
   async getAllTasks() {

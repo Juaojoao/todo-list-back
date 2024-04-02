@@ -30,11 +30,8 @@ export class CardController {
     return await this.cardService.getAll(userId);
   }
 
-  @Delete('/delete/:id/:activitiesId')
-  async delete(
-    @Param('id') id: number,
-    @Param('activitiesId') activitiesId: number,
-  ) {
-    return await this.cardService.delete(id, activitiesId);
+  @Delete('/delete/:id')
+  async delete(@Param('id') id: number) {
+    return await this.cardService.delete(id);
   }
 }
