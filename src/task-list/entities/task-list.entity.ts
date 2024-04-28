@@ -6,4 +6,5 @@ export class CreateTaskListEntity implements PrismaTaskList {
   cardId: number;
   createdAt: Date;
   updatedAt: Date;
+  order: number;
 }

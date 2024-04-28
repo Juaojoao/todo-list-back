@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateCardDto } from './dto/create-card.dto';
 import { PrismaService } from '../database/prismaService';
 import { UpdateCardDto } from './dto/update-card.dto';
+import { CardEntity } from './entities/card.entity';
 
 @Injectable()
 export class CardService {
@@ -68,7 +69,11 @@ export class CardService {
       where: {
         ActivitiesList: { Frame: { userId: { equals: userIdNumber } } },
       },
-      include: { tasklist: true },
+      include: {
+        tasklist: {
+          include: { tasks: true },
+        },
+      },
     });
   }
 
@@ -99,5 +104,28 @@ export class CardService {
     } catch (error) {
       return { message: 'Error deleting card' };
     }
+  }
+
+  async updateDescription({ id, description }: CardEntity) {
+    const cardId = Number(id);
+
+    if (!cardId) {
+      return { message: 'Activity List does not exist' };
+    }
+
+    const cardExists = await this.prisma.card.findFirst({
+      where: { id: cardId },
+    });
+
+    if (!cardExists) {
+      return { message: 'Activity List does not exist' };
+    }
+
+    await this.prisma.card.update({
+      where: { id: cardId },
+      data: { description },
+    });
+
+    return 'Card description updated successfully';
   }
 }

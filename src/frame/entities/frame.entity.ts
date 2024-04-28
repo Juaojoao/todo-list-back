@@ -4,4 +4,5 @@ export class FrameEntity {
   createdAt?: Date;
   updatedAt?: Date;
   userId?: number;
+  order?: number;
 }

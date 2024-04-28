@@ -24,8 +24,8 @@ export class TaskListController {
   }
 
   @Patch('/update/:id')
-  async update(@Param('id') id: number, @Body() data: UpdateTaskListDto) {
-    return await this.taskListService.updateTaskList(id, data);
+  async update(@Param('id') id: number, @Body() { name }: UpdateTaskListDto) {
+    return await this.taskListService.updateTaskList(id, name);
   }
 
   @Get('/get/:userId')
@@ -33,9 +33,9 @@ export class TaskListController {
     return await this.taskListService.getAllTaskList(userId);
   }
 
-  @Delete('/delete/:id/:cardId')
-  async delete(@Param('id') id: number, @Param('cardId') cardId: number) {
-    return await this.taskListService.deleteTaskList(id, cardId);
+  @Delete('/delete/:id')
+  async delete(@Param('id') id: number) {
+    return await this.taskListService.deleteTaskList(id);
   }
   // Fim TaskList
 

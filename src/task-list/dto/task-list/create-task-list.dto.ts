@@ -1,7 +1,6 @@
-import { IsNumber, IsString, IsOptional } from 'class-validator';
-import { CreateTaskListEntity } from '../../../task-list/entities/task-list.entity';
+import { IsNumber, IsString } from 'class-validator';
 
-export class CreateTaskListDto extends CreateTaskListEntity {
+export class CreateTaskListDto {
   @IsString()
   name: string;
 

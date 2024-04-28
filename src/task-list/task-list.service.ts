@@ -3,7 +3,6 @@ import { CreateTaskDto } from './dto/task/create-task.dto';
 import { PrismaService } from '../database/prismaService';
 import { UpdateTaskDto } from './dto/task/update-task.dto';
 import { CreateTaskListDto } from './dto/task-list/create-task-list.dto';
-import { UpdateTaskListDto } from './dto/task-list/update-task-list.dto';
 
 @Injectable()
 export class TaskListService {
@@ -28,18 +27,19 @@ export class TaskListService {
     return 'Task List created Successfuly';
   }
 
-  async updateTaskList(id: number, data: UpdateTaskListDto) {
+  async updateTaskList(id: number, name: string) {
     const taskListId = Number(id);
-    const cardId = Number(data.cardId);
 
-    if (!taskListId || !cardId) {
+    console.log(name);
+
+    if (!taskListId) {
       return {
         messege: 'Card or Task List not found',
       };
     }
 
     const taskListExists = await this.prisma.taskList.findFirst({
-      where: { id: taskListId, cardId: cardId },
+      where: { id: taskListId },
     });
 
     if (!taskListExists) {
@@ -50,7 +50,7 @@ export class TaskListService {
 
     await this.prisma.taskList.update({
       where: { id: taskListId },
-      data: data,
+      data: { name },
     });
 
     return 'Task List updated Successfuly';
@@ -83,18 +83,17 @@ export class TaskListService {
     });
   }
 
-  async deleteTaskList(id: number, cardId: number) {
+  async deleteTaskList(id: number) {
     const taskListId = Number(id);
-    const cardUid = Number(cardId);
 
-    if (!taskListId || !cardId) {
+    if (!taskListId) {
       return {
         messege: 'Card or Task List not found',
       };
     }
 
     const taskListExists = await this.prisma.taskList.findFirst({
-      where: { id: taskListId, cardId: cardUid },
+      where: { id: taskListId },
     });
 
     if (!taskListExists) {
@@ -103,12 +102,18 @@ export class TaskListService {
       };
     }
 
-    await this.prisma.taskList.delete({
-      where: { id: taskListId },
-    });
+    await this.prisma.$transaction([
+      this.prisma.task.deleteMany({
+        where: { taskListId: taskListId },
+      }),
+      this.prisma.taskList.delete({
+        where: { id: taskListId },
+      }),
+    ]);
 
     return 'Task List deleted Successfuly';
   }
+
   // Fim Task List
 
   // Inicio Task

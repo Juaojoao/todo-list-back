@@ -1,4 +1,7 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateTaskListDto } from './create-task-list.dto';
+import { IsString } from 'class-validator';
 
-export class UpdateTaskListDto extends PartialType(CreateTaskListDto) {}
+export class UpdateTaskListDto {
+  @IsString()
+  name: string;
+  order?: number;
+}

@@ -5,4 +5,5 @@ export class CreateTaskEntity implements PrismaTask {
   name: string;
   status: boolean;
   taskListId: number;
+  order: number;
 }

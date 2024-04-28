@@ -10,6 +10,7 @@ import {
 import { CardService } from './card.service';
 import { CreateCardDto } from './dto/create-card.dto';
 import { UpdateCardDto } from './dto/update-card.dto';
+import { CardEntity } from './entities/card.entity';
 
 @Controller('card')
 export class CardController {
@@ -33,5 +34,13 @@ export class CardController {
   @Delete('/delete/:id')
   async delete(@Param('id') id: number) {
     return await this.cardService.delete(id);
+  }
+
+  @Post('/updateDesc/:id')
+  async updateDescription(
+    @Param('id') id: number,
+    @Body() { description }: CardEntity,
+  ) {
+    return await this.cardService.updateDescription({ id, description });
   }
 }

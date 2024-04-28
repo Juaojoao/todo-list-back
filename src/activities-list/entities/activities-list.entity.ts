@@ -4,4 +4,5 @@ export class ActivitiesListEntity {
   createdAt?: Date;
   updatedAt?: Date;
   frameId?: number;
+  order?: number;
 }
