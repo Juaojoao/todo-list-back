@@ -55,12 +55,9 @@ export class TaskListController {
     return await this.taskListService.getAllTasks();
   }
 
-  @Delete('/task/delete/:id/:tasklistId')
-  async deleteTaskById(
-    @Param('id') id: number,
-    @Param('tasklistId') tasklistId: number,
-  ) {
-    return await this.taskListService.deleteTask(id, tasklistId);
+  @Delete('/task/delete/:id')
+  async deleteTaskById(@Param('id') id: number) {
+    return await this.taskListService.deleteTask(id);
   }
 
   @Put('/task/updateStatus/:id')

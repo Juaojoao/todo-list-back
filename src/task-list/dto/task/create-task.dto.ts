@@ -1,10 +1,14 @@
-import { IsNumber, IsString } from 'class-validator';
-import { CreateTaskEntity } from '../../../task-list/entities/task.entity';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 
-export class CreateTaskDto extends CreateTaskEntity {
+export class CreateTaskDto {
   @IsString()
   name: string;
 
   @IsNumber()
+  @IsOptional()
+  order: number;
+
+  @IsNumber()
+  @IsOptional()
   taskListId: number;
 }

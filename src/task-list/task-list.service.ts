@@ -195,18 +195,17 @@ export class TaskListService {
     return await this.prisma.task.findMany();
   }
 
-  async deleteTask(id: number, taskListId: number) {
+  async deleteTask(id: number) {
     const taskId = Number(id);
-    const taskListUid = Number(taskListId);
 
-    if (!taskListUid || !taskId) {
+    if (!taskId) {
       return {
         messege: 'Task or task List not found',
       };
     }
 
     const taskExists = await this.prisma.task.findFirst({
-      where: { id: taskId, taskListId: taskListUid },
+      where: { id: taskId },
     });
 
     if (!taskExists) {
