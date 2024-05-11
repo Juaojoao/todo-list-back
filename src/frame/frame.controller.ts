@@ -6,10 +6,10 @@ import {
   Param,
   Patch,
   Post,
+  Put,
 } from '@nestjs/common';
 import { FrameService } from './frame.service';
 import { CreateFrameDto } from './dto/create-frame.dto';
-import { log } from 'console';
 
 @Controller('frame')
 export class FrameController {
@@ -33,5 +33,10 @@ export class FrameController {
   @Delete('/delete/:id')
   async delete(@Param('id') id: number) {
     return await this.frameService.delete(id);
+  }
+
+  @Put('/order/:id')
+  async order(@Param('id') id: number, @Body() order: number) {
+    return await this.frameService.order(id, order);
   }
 }

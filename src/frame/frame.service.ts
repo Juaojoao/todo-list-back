@@ -102,4 +102,30 @@ export class FrameService {
       return { message: 'Frame not deleted' };
     }
   }
+
+  async order(id: number, possition: any) {
+    const frameId = Number(id);
+    const { order } = possition;
+
+    console.log(frameId, order);
+
+    if (!frameId || !order) {
+      return { message: 'Frame does not exist' };
+    }
+
+    const frame = await this.prisma.frame.findFirst({
+      where: { id: frameId },
+    });
+
+    if (!frame) {
+      return { message: 'Frame does not exist' };
+    }
+
+    await this.prisma.frame.update({
+      where: { id: frameId },
+      data: { order: order },
+    });
+
+    return 'Frame reordered successfully';
+  }
 }
