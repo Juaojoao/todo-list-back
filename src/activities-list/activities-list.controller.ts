@@ -36,4 +36,9 @@ export class ActivitiesListController {
   async delete(@Param('id') id: number) {
     return this.activitiesListService.delete(id);
   }
+
+  @Put('/order/:id')
+  async order(@Param('id') id: number, @Body() order: number) {
+    return await this.activitiesListService.order(id, order);
+  }
 }

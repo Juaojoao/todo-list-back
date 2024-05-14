@@ -34,6 +34,7 @@ export class FrameService {
 
     return await this.prisma.frame.findMany({
       where: { userId: user },
+      orderBy: { order: 'asc' },
     });
   }
 
@@ -106,8 +107,6 @@ export class FrameService {
   async order(id: number, possition: any) {
     const frameId = Number(id);
     const { order } = possition;
-
-    console.log(frameId, order);
 
     if (!frameId || !order) {
       return { message: 'Frame does not exist' };

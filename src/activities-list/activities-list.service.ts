@@ -68,6 +68,7 @@ export class ActivitiesListService {
 
     return await this.prisma.activitiesList.findMany({
       where: { Frame: { userId: userIdNumber } },
+      orderBy: { order: 'asc' },
     });
   }
 
@@ -108,5 +109,29 @@ export class ActivitiesListService {
       console.error('Error deleting activity list:', error);
       return { message: 'Error deleting activity list' };
     }
+  }
+
+  async order(id: number, possition: any) {
+    const listId = Number(id);
+    const { order } = possition;
+
+    if (!listId || !order) {
+      return { message: 'Frame does not exist' };
+    }
+
+    const activitiesList = await this.prisma.activitiesList.findFirst({
+      where: { id: listId },
+    });
+
+    if (!activitiesList) {
+      return { message: 'Frame does not exist' };
+    }
+
+    await this.prisma.activitiesList.update({
+      where: { id: listId },
+      data: { order: order },
+    });
+
+    return 'Activity List reordered successfully';
   }
 }
