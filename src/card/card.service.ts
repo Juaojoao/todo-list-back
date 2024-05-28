@@ -74,6 +74,7 @@ export class CardService {
           include: { tasks: true },
         },
       },
+      orderBy: { order: 'asc' },
     });
   }
 

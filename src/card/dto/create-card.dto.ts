@@ -11,4 +11,8 @@ export class CreateCardDto extends CardEntity {
 
   @IsNumber()
   activitiesListId: number;
+
+  @IsOptional()
+  @IsNumber()
+  order?: number;
 }
