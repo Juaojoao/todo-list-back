@@ -7,9 +7,13 @@ import { FrameModule } from './frame/frame.module';
 import { ActivitiesListModule } from './activities-list/activities-list.module';
 import { CardModule } from './card/card.module';
 import { TaskListModule } from './task-list/task-list.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     AuthModule,
     UserModule,
     FrameModule,
@@ -25,4 +29,4 @@ import { TaskListModule } from './task-list/task-list.module';
     },
   ],
 })
-export class AppModule {}
+export class AppModule { }
